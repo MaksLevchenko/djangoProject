@@ -5,7 +5,7 @@ from django.http import JsonResponse
 
 from Django_Stripe_Api.models import Item
 from djangoProject import settings
-print(settings.STRIPE_SECRET_KEY)
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
