@@ -1,6 +1,8 @@
 from django.db import models
 
 
+
+
 class Item(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=500)
@@ -11,3 +13,5 @@ class Item(models.Model):
 
     def get_float_price(self):
         return "{0:.2f}".format(self.price / 100)
+
+

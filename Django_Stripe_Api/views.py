@@ -1,6 +1,6 @@
 import stripe
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.http import JsonResponse
 
 from Django_Stripe_Api.models import Item
@@ -17,8 +17,14 @@ class CancelView(TemplateView):
     template_name = "cancel.html"
 
 
-class ItemDetailView(TemplateView):
+class ItemListView(ListView):
     template_name = 'index.html'
+    model = Item
+    queryset = Item.objects.all()
+
+
+class ItemDetailView(TemplateView):
+    template_name = 'item_detail.html'
 
     def get_context_data(self, **kwargs):
         item = Item.objects.get(id=self.kwargs['pk'])
@@ -55,7 +61,6 @@ class CreateCheckoutSessionView(View):
             cancel_url=domain + '/cansel/',
         )
         session_id = session['id']
-        print(session_id)
         return JsonResponse(
             {
                 'id': session_id
