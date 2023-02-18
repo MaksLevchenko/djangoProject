@@ -1,6 +1,7 @@
 import stripe
+from django.contrib.auth.models import User
 from django.views import View
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 from django.http import JsonResponse
 
 from Django_Stripe_Api.models import Item, Order
@@ -68,10 +69,46 @@ class CreateCheckoutSessionView(View):
         )
 
 
-class OrderListView(ListView):
+class OrderDetailView(TemplateView):
     template_name = 'order_list.html'
-    model = Order
-    queryset = Order.objects.all()
-    # for i in queryset:
-    #     for j in i.product.all():
-    #         print(sum(map(float, (i for i in j.get_float_price()))))
+    # model = Order
+    # slug_field = 'pk'
+
+    def get_context_data(self, **kwargs):
+        order = Order.objects.get(id=self.kwargs['pk'])
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        context.update({
+            'order': order,
+            'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
+        })
+        print(context)
+        return context
+
+
+class CreateOderCheckoutSessionView(View):
+    def post(self, request, *args, **kwargs):
+        price = int(Order.objects.get(id=self.kwargs["pk"]).get_all_product_price()[:-3])*100
+        domain = 'http://127.0.0.1:8000'
+        session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'rub',
+                        'unit_amount': price,
+                        'product_data': {
+                            'name': 'all product',
+                        },
+                    },
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=domain + '/success/',
+            cancel_url=domain + '/cansel/',
+        )
+        session_id = session['id']
+        return JsonResponse(
+            {
+                'id': session_id
+            }
+        )

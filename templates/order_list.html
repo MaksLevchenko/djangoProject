@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<a href="/"><button>На главную.</button></a>
+<div>
+    {% for product in order.product.all %}
+        {{ product }}<br>
+        {{ product.description }}<br>
+        {{ product.get_float_price }} Р<br><br>
+    {% endfor %}
+</div>
+<div>
+    All price: {{ order.get_all_product_price }} Р
+</div>
+<div>
+    <button type="button" id="buy-all-button">Buy all!</button>
+</div>
+{% csrf_token %}
+</body>
+<script type="text/javascript">
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    var stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
+    var checkoutButton = document.getElementById("buy-all-button");
+    checkoutButton.addEventListener("click", function () {
+        fetch("{% url 'bay-all' 1 %}", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (session) {
+                return stripe.redirectToCheckout({sessionId: session.id});
+            })
+            .then(function (result) {
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+    });
+</script>
+</html>
