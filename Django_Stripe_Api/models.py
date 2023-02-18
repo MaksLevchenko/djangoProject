@@ -2,13 +2,6 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Order(models.Model):
-    username = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.username}'
-
-
 class Item(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=500)
@@ -21,3 +14,9 @@ class Item(models.Model):
         return "{0:.2f}".format(self.price / 100)
 
 
+class Order(models.Model):
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ManyToManyField(Item)
+
+    def __str__(self):
+        return f'{self.username}'

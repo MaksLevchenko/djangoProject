@@ -9,5 +9,6 @@ urlpatterns = [
     path('success/', views.SuccessView.as_view(), name='success'),
     path('cancel/', views.CancelView.as_view(), name='cancel'),
     path('item/<int:pk>', views.ItemDetailView.as_view(), name='item_detail'),
+    path('basket/', views.OrderListView.as_view()),
     path('buy/<int:pk>', views.CreateCheckoutSessionView.as_view(), name='checkout'),
 ]

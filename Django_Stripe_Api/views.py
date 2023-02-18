@@ -3,7 +3,7 @@ from django.views import View
 from django.views.generic import TemplateView, ListView
 from django.http import JsonResponse
 
-from Django_Stripe_Api.models import Item
+from Django_Stripe_Api.models import Item, Order
 from djangoProject import settings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -66,3 +66,12 @@ class CreateCheckoutSessionView(View):
                 'id': session_id
             }
         )
+
+
+class OrderListView(ListView):
+    template_name = 'order_list.html'
+    model = Order
+    queryset = Order.objects.all()
+    # for i in queryset:
+    #     for j in i.product.all():
+    #         print(sum(map(float, (i for i in j.get_float_price()))))
