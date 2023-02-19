@@ -1,5 +1,14 @@
-# This is a Django project
+# Это проект на Django
+### Для запуска проекта выполние следующие пункты:
 
-### To start the project, copy the contents of the project on your device. 
-### Register on the Stripe.com website and in the Developer tab find your individual keys, Secret Key and Publisable Key. Copy them and get into the project, into the settings.py file.! in place stripe_secret_key and stripe_public_key. 
-### Then run the project by: python. \ manage.py runserver command.
+1) Перенесите проект на свой компьютер командой: 
+ "git clone https://github.com/MaksLevchenko/djangoProject.git"
+2) Установите все зависимости из файла requirements.txt
+3) В корневой директории проекта создайте файл с названием .env и в нём напишите 2 переменные, каждую на новой строке: STRIPE_SECRET_KEY= и STRIPE_PUBLIC_KEY=
+4) Зайдите на сайт: http://stripe.com/ и зарегистрируйтесь. Затем перейдите во вкладку Developers\API key.
+5) Скопируйте Publishable key и вставте его в переменную файла .env, как здесь: STRIPE_PUBLIC_KEY=pk_test_51Mbq0HEAxMBgHSsszx... без кавычек и пробела.
+6) Затем проделайте тоже самое для ключа Secret key, должно получиться вот так: STRIPE_SECRET_KEY=sk_test_51Mbq0HEAxMBgHSssnl...
+7) Теперь можно запускать сервер командой в терминале python manage.py runserver
+8) Перейдите по ссылке http://127.0.0.1:8000 Вы увидите страницу на которой можно купить товар, нажав на кнопку: Buy, либо перейти в корзину и купить сразу несколько товаров.
+____
+# На этом всё! Спасибо за внимание!
