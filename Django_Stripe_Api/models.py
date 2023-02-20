@@ -15,7 +15,7 @@ class Item(models.Model):
 
 
 class Order(models.Model):
-    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.OneToOneField(User, on_delete=models.CASCADE)
     product = models.ManyToManyField(Item)
 
     def __str__(self):

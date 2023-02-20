@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Buy cool new product</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
@@ -8,44 +8,48 @@
     <style>
 
     </style>
-  </head>
-  <body>
-    <section>
-      <div class="product">
+</head>
+<body>
+<section>
+    <div class="product">
         <div class="description">
-          <h3>{{ item.name }}</h3>
-          <h5>{{ item.get_float_price }} p.</h5>
+            <h3>{{ item.name }}</h3>
+            <h5>{{ item.get_float_price }} p.</h5>
         </div>
-      </div>
-      <button type="button" id="checkout-button">Buy</button>
-    </section>
-    {% csrf_token %}
-  </body>
-  <script type="text/javascript">
+    </div>
+    <form action="{% url 'add_product' item.id %}" method="post">
+        <button>Добавить в корзину</button>
+        {% csrf_token %}
+    </form>
+    <button type="button" id="checkout-button">Buy</button>
+</section>
+{% csrf_token %}
+</body>
+<script type="text/javascript">
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     var stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
     var checkoutButton = document.getElementById("checkout-button");
     checkoutButton.addEventListener("click", function () {
-      fetch("{% url 'checkout' item.id %}", {
-        method: "POST",
-        headers: {
-            'X-CSRFToken': csrftoken
-        }
-      })
-        .then(function (response) {
-          return response.json();
+        fetch("{% url 'checkout' item.id %}", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
         })
-        .then(function (session) {
-          return stripe.redirectToCheckout({ sessionId: session.id });
-        })
-        .then(function (result) {
-          if (result.error) {
-            alert(result.error.message);
-          }
-        })
-        .catch(function (error) {
-          console.error("Error:", error);
-        });
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (session) {
+                return stripe.redirectToCheckout({sessionId: session.id});
+            })
+            .then(function (result) {
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
     });
-  </script>
+</script>
 </html>

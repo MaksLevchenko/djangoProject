@@ -1,7 +1,7 @@
 import stripe
-from django.contrib.auth.models import User
+from django.shortcuts import redirect
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView
 from django.http import JsonResponse
 
 from Django_Stripe_Api.models import Item, Order
@@ -71,6 +71,7 @@ class CreateCheckoutSessionView(View):
 
 class OrderDetailView(TemplateView):
     template_name = 'order_list.html'
+
     # model = Order
     # slug_field = 'pk'
 
@@ -81,13 +82,12 @@ class OrderDetailView(TemplateView):
             'order': order,
             'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
         })
-        print(context)
         return context
 
 
 class CreateOderCheckoutSessionView(View):
     def post(self, request, *args, **kwargs):
-        price = int(Order.objects.get(id=self.kwargs["pk"]).get_all_product_price()[:-3])*100
+        price = int(Order.objects.get(id=self.kwargs["pk"]).get_all_product_price()[:-3]) * 100
         domain = 'http://127.0.0.1:8000'
         session = stripe.checkout.Session.create(
             line_items=[
@@ -112,3 +112,14 @@ class CreateOderCheckoutSessionView(View):
                 'id': session_id
             }
         )
+
+
+class AddInOrderView(View):
+
+    def post(self, request, pk):
+        item = Item.objects.get(id=pk)
+        order = Order(id=self.request.user.id, username=self.request.user)
+        order.save()
+        order.product.add(str(item.id))
+
+        return redirect("/")

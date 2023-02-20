@@ -5,6 +5,7 @@ from Django_Stripe_Api import views
 
 urlpatterns = [
     path('', views.ItemListView.as_view()),
+    path('add-product/<int:pk>', views.AddInOrderView.as_view(), name='add_product'),
     path('admin/', admin.site.urls),
     path('success/', views.SuccessView.as_view(), name='success'),
     path('cancel/', views.CancelView.as_view(), name='cancel'),
