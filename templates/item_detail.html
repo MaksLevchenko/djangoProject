@@ -14,7 +14,7 @@
     <div class="product">
         <div class="description">
             <h3>{{ item.name }}</h3>
-            <h5>{{ item.get_float_price }} p.</h5>
+            <h5>{{ item.get_float_price }} {{ item.currency }}.</h5>
         </div>
     </div>
     <form action="{% url 'add_product' item.id %}" method="post">

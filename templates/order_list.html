@@ -13,11 +13,11 @@
     {% for product in order.product.all %}
         {{ product }}<br>
         {{ product.description }}<br>
-        {{ product.get_float_price }} Р<br><br>
+        {{ product.get_float_price }} {{ product.currency }}<br><br>
     {% endfor %}
 </div>
 <div>
-    All price: {{ order.get_all_product_price }} Р
+    All price: {{ order.get_all_product_price }} P
 </div>
 <div>
     <button type="button" id="buy-all-button">Buy all!</button>

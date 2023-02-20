@@ -23,4 +23,3 @@ class Order(models.Model):
 
     def get_all_product_price(self):
         return "{0:.2f}".format(sum(price.price for price in self.product.all())/100)
-

@@ -18,7 +18,7 @@
             {% for item in item_list %}
                 <a href="{% url 'item_detail' item.id %}"><h3>{{ item.name }}</h3></a>
                 <h4>{{ item.description }}</h4>
-                <h5>{{ item.get_float_price }} p.</h5>
+                <h5>{{ item.get_float_price }} {{ item.currency }}.</h5>
                 <form action="{% url 'add_product' item.id %}" method="post">
                     <button>Добавить в корзину</button>
                     {% csrf_token %}
