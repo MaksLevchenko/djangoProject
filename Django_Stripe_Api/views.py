@@ -11,20 +11,24 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class SuccessView(TemplateView):
+    """Благодарность"""
     template_name = "success.html"
 
 
 class CancelView(TemplateView):
+    """Отмена"""
     template_name = "cancel.html"
 
 
 class ItemListView(ListView):
+    """Список элементов"""
     template_name = 'index.html'
     model = Item
     queryset = Item.objects.all()
 
 
 class ItemDetailView(TemplateView):
+    """Страница элемента"""
     template_name = 'item_detail.html'
 
     def get_context_data(self, **kwargs):
@@ -38,6 +42,8 @@ class ItemDetailView(TemplateView):
 
 
 class CreateCheckoutSessionView(View):
+    """Оформление заказа"""
+
     def post(self, request, *args, **kwargs):
         name = Item.objects.get(id=self.kwargs["pk"]).name
         description = Item.objects.get(id=self.kwargs["pk"]).description
@@ -70,10 +76,8 @@ class CreateCheckoutSessionView(View):
 
 
 class OrderDetailView(TemplateView):
+    """Оформление заказа одного элемента"""
     template_name = 'order_list.html'
-
-    # model = Order
-    # slug_field = 'pk'
 
     def get_context_data(self, **kwargs):
         order = Order.objects.get(id=self.kwargs['pk'])
@@ -86,6 +90,9 @@ class OrderDetailView(TemplateView):
 
 
 class CreateOderCheckoutSessionView(View):
+    """Сессия заказа"""
+    coupon = stripe.Coupon.create(percent_off=20, duration="once")
+
     def post(self, request, *args, **kwargs):
         price = int(Order.objects.get(id=self.kwargs["pk"]).get_all_product_price()[:-3]) * 100
         domain = 'http://127.0.0.1:8000'
@@ -103,6 +110,10 @@ class CreateOderCheckoutSessionView(View):
                 },
             ],
             mode='payment',
+            discounts=[{
+                'coupon': self.coupon.id,
+            }],
+            # allow_promotion_codes=True,
             success_url=domain + '/success/',
             cancel_url=domain + '/cansel/',
         )
@@ -115,6 +126,7 @@ class CreateOderCheckoutSessionView(View):
 
 
 class AddInOrderView(View):
+    """Добавление в корзину"""
 
     def post(self, request, pk):
         item = Item.objects.get(id=pk)

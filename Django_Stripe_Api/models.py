@@ -3,6 +3,7 @@ from django.db import models
 
 
 class Item(models.Model):
+    """Модель элемента"""
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=500)
     price = models.IntegerField()
@@ -15,6 +16,7 @@ class Item(models.Model):
 
 
 class Order(models.Model):
+    """Модель заказа"""
     username = models.OneToOneField(User, on_delete=models.CASCADE)
     product = models.ManyToManyField(Item)
 
@@ -22,4 +24,4 @@ class Order(models.Model):
         return f'{self.username}'
 
     def get_all_product_price(self):
-        return "{0:.2f}".format(sum(price.price for price in self.product.all())/100)
+        return "{0:.2f}".format(sum(price.price for price in self.product.all()) / 100)
